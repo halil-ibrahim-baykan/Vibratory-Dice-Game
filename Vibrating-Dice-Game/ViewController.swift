@@ -44,39 +44,45 @@ class ViewController: UIViewController {
     //
     //    }
     override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-  
+        
         createDiceValue()
- 
+        
     }
     
     func createDiceValue(){
         
-        let dice1 = arc4random_uniform(6)+1 //-> it starts 0 that's why we add 1
-        let dice2 = arc4random_uniform(6)+1
         
-        firstDiceImage.image = UIImage(named: String(dice1))
-        secondDiceImage.image = UIImage(named: String(dice2))
-        
-        resultOfSet(dice1: Int(dice1), dice2: Int(dice2))
-        
-        if currentSet > maxSetNumber{
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
+            let dice1 = arc4random_uniform(6)+1 //-> it starts 0 that's why we add 1
+            let dice2 = arc4random_uniform(6)+1
             
-            if playersScores.firstPlayerScore > playersScores.secondPlayerScore{
-                resultLabel.text = "Game Over 1. Player Win!"
-            }else{
-                resultLabel.text = "Game Over 2. Player Win!"
+            self.firstDiceImage.image = UIImage(named: String(dice1))
+            self.secondDiceImage.image = UIImage(named: String(dice2))
+            
+            self.resultOfSet(dice1: Int(dice1), dice2: Int(dice2))
+            
+            if self.currentSet > self.maxSetNumber{
+                
+                if self.playersScores.firstPlayerScore > self.playersScores.secondPlayerScore{
+                    self.resultLabel.text = "Game Over 1. Player Win!"
+                }else{
+                    self.resultLabel.text = "Game Over 2. Player Win!"
+                }
+                
+                self.self.playersScores.firstPlayerScore = 0
+                self.playersScores.secondPlayerScore = 0
+                self.firstPlayerScoreLabel.text = "0"
+                self.secondPlayerScoreLabel.text = "0"
+                self.firstPlayerPointLabel.text = "0"
+                self.secondPlayerPointLabel.text = "0"
+                
+                self.currentSet = 1
             }
-            
-            playersScores.firstPlayerScore = 0
-            playersScores.secondPlayerScore = 0
-            firstPlayerScoreLabel.text = "0"
-            secondPlayerScoreLabel.text = "0"
-            firstPlayerPointLabel.text = "0"
-            secondPlayerPointLabel.text = "0"
-            
-            currentSet = 1
         }
         
+        resultLabel.text = "It comes for player \(playerTurn)"
+        firstDiceImage.image = UIImage(named: "zar1")
+        secondDiceImage.image = UIImage(named: "zar1")
     }
     
     func resultOfSet(dice1: Int, dice2: Int){
@@ -119,20 +125,8 @@ class ViewController: UIViewController {
                 
                 resultLabel.text = "\(currentSet) of set is Tie!"
                 
-                
             }
-            
         }
-        
-        
-        
-        
-        
     }
-    
-    
-    
-    
-    
 }
 
