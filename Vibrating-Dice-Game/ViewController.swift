@@ -9,7 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet weak var firstPlayerScoreLabel: UILabel!
     @IBOutlet weak var secondPlayerScoreLabel: UILabel!
     @IBOutlet weak var firstPlayerPointLabel: UILabel!
@@ -30,21 +30,25 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+            
+        }
+        
         if let background = UIImage(named: "arkaPlan"){
             self.view.backgroundColor = UIColor(patternImage: background)
         }
+        
+    }
+    
+    //    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+    //
+    //    }
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+  
+        createDiceValue()
  
     }
     
-//    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-//
-//    }
-    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-//        print("shaked")
-        
-        createDiceValue()
-    }
-
     func createDiceValue(){
         
         let dice1 = arc4random_uniform(6)+1 //-> it starts 0 that's why we add 1
@@ -54,6 +58,25 @@ class ViewController: UIViewController {
         secondDiceImage.image = UIImage(named: String(dice2))
         
         resultOfSet(dice1: Int(dice1), dice2: Int(dice2))
+        
+        if currentSet > maxSetNumber{
+            
+            if playersScores.firstPlayerScore > playersScores.secondPlayerScore{
+                resultLabel.text = "Game Over 1. Player Win!"
+            }else{
+                resultLabel.text = "Game Over 2. Player Win!"
+            }
+            
+            playersScores.firstPlayerScore = 0
+            playersScores.secondPlayerScore = 0
+            firstPlayerScoreLabel.text = "0"
+            secondPlayerScoreLabel.text = "0"
+            firstPlayerPointLabel.text = "0"
+            secondPlayerPointLabel.text = "0"
+            
+            currentSet = 1
+        }
+        
     }
     
     func resultOfSet(dice1: Int, dice2: Int){
@@ -67,7 +90,7 @@ class ViewController: UIViewController {
             resultLabel.text = "2. player turn"
             playerTurn = 2
             secondPlayerPointLabel.text = "0"
-    
+            
         }else{
             
             playersPoints.secondPlayerPoint = dice1 + dice2
@@ -75,15 +98,18 @@ class ViewController: UIViewController {
             secondPlayerPosition.image = UIImage(named: "bekle")
             firstPlayerPosition.image = UIImage(named: "onay")
             playerTurn = 1
-          
+            
             if playersPoints.firstPlayerPoint > playersPoints.secondPlayerPoint {
                 
                 playersScores.firstPlayerScore += 1
-                resultLabel.text = "\(currentSet) of set 1. player Win!"
+                resultLabel.text = "\(currentSet). Set => 1. player Win!"
                 firstPlayerScoreLabel.text = String(playersScores.firstPlayerScore)
+                currentSet += 1
+                
             }else if playersPoints.firstPlayerPoint < playersPoints.secondPlayerPoint{
+                
                 playersScores.secondPlayerScore += 1
-                resultLabel.text = "\(currentSet) of set 2. player Win!"
+                resultLabel.text = "\(currentSet). Set => 2. Player Win!"
                 secondPlayerScoreLabel.text = String(playersScores.secondPlayerScore)
                 currentSet += 1
                 
@@ -95,7 +121,7 @@ class ViewController: UIViewController {
                 
                 
             }
-
+            
         }
         
         
